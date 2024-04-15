@@ -71,7 +71,7 @@ class UserController extends Controller
             $existingUser = User::where('email', $validatedData['email'])->first();
             if ($existingUser) {
             //Retorna mensagem de error, caso dê errado
-            return response()->json(["error" => "Usuário existente"], 400);
+            return response()->json(["error" => "Email existente"], 400);
         }
 
             $user = User::findOrFail($id);
@@ -86,14 +86,17 @@ class UserController extends Controller
             return response()->json(["message"=> "Usuário atualizado com sucesso"],200);
         }
 
+        //Deletar um usuário específico
         public function destroy($id){
             $user = User::find($id);
 
             if (!$user) {
+                //Retorna mensagem de error
                 return response()-> json(["error"=> "Usuário não encontrado"],404);
             }
 
             $user->delete();
+            //Retorna mesagem de sucesso
             return response()->json(["message"=> "Usuário deletado com sucesso"],200);
         }
 }
