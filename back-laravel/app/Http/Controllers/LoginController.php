@@ -22,7 +22,6 @@ class LoginController extends Controller
             'password.min' => 'O campo de senha deve ter no mínimo :min caracteres',
         ]);
 
-
         // Tentativa de autenticação do usuário
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
@@ -30,8 +29,14 @@ class LoginController extends Controller
             return response()->json(['error' => 'Email ou senha inválido'], 400);
         }
 
-        // Retorna mensagem de sucesso se a autenticação for bem-sucedida
-        return response()->json(['success' => 'Logado'], 200);
+        // Obtém o usuário autenticado
+        $user = Auth::user();
+
+        // Gera um token de acesso para o usuário
+        $accessToken = $user->createToken('AccessToken')->accessToken;
+
+        // Retorna uma resposta JSON com a mensagem de sucesso e o token de acesso
+        return response()->json(['success' => 'Logado', 'token' => $accessToken], 200);
     }
 
     //Deslogar da sessão atual
