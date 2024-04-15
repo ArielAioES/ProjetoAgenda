@@ -38,6 +38,11 @@ class UserController extends Controller
             "username" => "required|string|max:255",
             "email" => "required|email",
             "password" => "required|string|min:6",
+        ],[
+            'email.required' =>'O campo de email é obrigatório',
+            'email.email' =>'O email deve ser válido',
+            'password.required' =>'O campo de senha é obrigatório',
+            'password.min' =>'O campo de senha deve ter no mínimo :min caracteres',
         ]);
 
         // Verifica se o e-mail já está cadastrado
@@ -65,6 +70,11 @@ class UserController extends Controller
                 "username" => "required|string|max:255",
                 "email" => "required|email",
                 "password" => "required|string|min:6",
+            ],[
+                'email.required' =>'O campo de email é obrigatório',
+                'email.email' =>'O email deve ser válido',
+                'password.required' =>'O campo de senha é obrigatório',
+                'password.min' =>'O campo de senha deve ter no mínimo :min caracteres',
             ]);
 
             // Verifica se o e-mail já está cadastrado
