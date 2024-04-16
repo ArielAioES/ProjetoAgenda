@@ -15,9 +15,13 @@ function Home () {
         command: () => navigate('/') 
       },
       {
-        label: 'Login',
+        label: 'Login /',
         icon: 'pi pi-fw pi-user',
         command: () => navigate('/login')
+      },
+      {
+        label: '/ Register',
+        command: () => navigate('/register')
       },
     ];
 
