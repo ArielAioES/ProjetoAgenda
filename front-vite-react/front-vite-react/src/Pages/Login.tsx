@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../assets/login.css'
 
 const Login = () => {
 
@@ -43,8 +44,8 @@ const Login = () => {
 
     return (
         <div className="loginpage">
-            <h2>Login</h2>
             <form onSubmit={handleSubmit}>
+                <h1>Login</h1>
                 <div className="form-field">
                     <label htmlFor="email">Email</label>
                     <input

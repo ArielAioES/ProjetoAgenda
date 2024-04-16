@@ -1,21 +1,19 @@
 import React from "react";
-import { Route, BrowserRouter, Switch } from "react-router-dom";
-import Login from '../Pages/Login.tsx';
-import Register from '../Pages/Register.tsx'; 
-import Home from '../Pages/Home.tsx';
-import Calendar from "../Pages/Calendar.tsx";
+import { Route, BrowserRouter } from "react-router-dom";
+import Login from '../Pages/Login';
+import Register from '../Pages/Register'; 
+import Home from '../Pages/Home';
+import Calendar from "../Pages/Calendar";
 
-const Routes = () => {
-   return (
-       <BrowserRouter>
-           <Switch>
-               <Route component={Home} path="/" exact/>
-               <Route component={Login} path="/Login" />
-               <Route component={Register} path="/Register" exact/>
-               <Route component={Calendar} path="/Calendar" exact/>
-           </Switch>
-       </BrowserRouter>
-   );
+const Routes: React.FC = () => {
+    return (
+        <BrowserRouter>
+            <Route component={Home} path="/" exact />
+            <Route component={Login} path="/Login" />
+            <Route component={Register} path="/Register" />
+            <Route component={Calendar} path="/Calendar" />
+        </BrowserRouter>
+    );
 };
 
 export default Routes;
