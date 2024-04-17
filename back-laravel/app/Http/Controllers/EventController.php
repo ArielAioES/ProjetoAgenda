@@ -2,35 +2,112 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\User;
+use App\Mail\EventInvitation;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller
 {
-    public function store(Request $request)
-{
-    // Validação dos dados recebidos na requisição
-    $validatedData = $request->validate([
-        "date" => "required|date",
-        "time" => "required|date_format:H:i",
-        "duration" => "required|integer",
-        "description" => "required|string",
-    ]);
-
-    try {
-        // Tenta criar o evento com os dados validados
-        $event = Event::create($validatedData);
-
-        // Associa o evento ao usuário autenticado
-        $user = auth()->user();
-        $user->events()->save($event);
-
-        // Retorna uma resposta de sucesso
-        return response()->json(['success' => 'Evento criado'], 200);
-    } catch (\Exception $e) {
-        // Se ocorrer um erro, retorna uma resposta de erro com uma mensagem
-        return response()->json(['error' => 'Erro ao criar o evento: ' . $e->getMessage()], 500);
+    public function index()
+    {
+        try {
+            $events = Event::all();
+            return view('events.index', compact('events'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to fetch events: ' . $e->getMessage());
+        }
     }
-}
+
+    public function create()
+    {
+        return view('events.create');
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $request->validate([
+                'title' => 'required',
+                'date' => 'required',
+                'time' => 'required',
+                'duration' => 'required',
+                'description' => 'required',
+            ]);
+
+            Event::create([
+                'title' => $request->title,
+                'date' => $request->date,
+                'time' => $request->time,
+                'duration' => $request->duration,
+                'description' => $request->description,
+            ]);
+
+            return redirect()->route('events.index')
+                ->with('success', 'Event created successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Failed to create event: ' . $e->getMessage());
+        }
+    }
+
+    public function edit(Event $event)
+    {
+        return view('events.edit', compact('event'));
+    }
+
+    public function update(Request $request, Event $event)
+    {
+        try {
+            $request->validate([
+                'title' => 'required',
+                'date' => 'required',
+                'time' => 'required',
+                'duration' => 'required',
+                'description' => 'required',
+            ]);
+
+            $event->update($request->all());
+
+            return redirect()->route('events.index')
+                ->with('success', 'Event updated successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Failed to update event: ' . $e->getMessage());
+        }
+    }
+
+    public function destroy(Event $event)
+    {
+        try {
+            $event->delete();
+
+            return redirect()->route('events.index')
+                ->with('success', 'Event deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to delete event: ' . $e->getMessage());
+        }
+    }
+    public function inviteUser(Request $request)
+    {
+        try {
+            // Validating the received data
+            $request->validate([
+                'email' => 'required|email',
+                'event_id' => 'required|exists:events,id',
+            ]);
+
+            // Finding the event by its ID
+            $event = Event::findOrFail($request->event_id);
+
+            // Sending the invitation via email
+            Mail::to($request->email)->send(new EventInvitation($event));
+
+            // Returning a success response
+            return response()->json(['message' => 'Invitation sent successfully'], 200);
+        } catch (\Exception $e) {
+            // Returning an error response in case of an exception
+            return response()->json(['error' => 'Failed to send invitation by email: ' . $e->getMessage()], 500);
+        }
+    }
 
 }
