@@ -8,6 +8,39 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    public function login(Request $request)
+    {
+        $credentials = request(['email', 'password']);
+        if(!Auth::attempt($credentials)){
+
+            $error = "Not authorized";
+            $response = [
+                'error' => $error
+            ];
+            return response()->json($response, 404);
+        }
+
+        $user = $request->user();
+        $response['name']= $user->name;
+        $response['email']= $user->email;
+        $response['token']= $user->createToken('token')->accessToken;
+        return response()->json($response, 200);
+    }
+
+    public function logout(Request $request)
+    {
+        $isUser = $request->user()->token()->revoke();
+        if($isUser){
+            $response['message'] = "Logout successful";
+            return response()->json($response, 200);
+        }
+        else{
+            $response = "Something's gone wrong";
+            return response()->json($response, 404);
+        }
+    }
+}
+    /*
     //Logar em alguma conta
     public function store(Request $request)
     {
@@ -47,4 +80,4 @@ class LoginController extends Controller
         // Retorna mensagem de sucesso
         return response()->json(['message' => 'Deslogado'], 200);
     }
-}
+}*/
