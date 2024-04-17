@@ -1,45 +1,70 @@
 nav {
-  position: fixed; /* Fixa a navbar no topo da página */
-  top: 0; /* Posiciona a navbar no topo */
-  left: 0; /* Posiciona a navbar no canto esquerdo */
-  width: 100%; /* Define a largura da navbar como 100% da largura da tela */
-  background-color: #333; /* Cor de fundo da navbar */
-  padding: 0 20px; /* Espaçamento interno */
-  z-index: 1000; /* Define a ordem de empilhamento para garantir que a navbar esteja sempre acima do conteúdo */
-  display: flex; /* Alinha os itens horizontalmente */
-  justify-content: space-between; /* Espaçamento entre os itens */
+  position: fixed;
+  /* Fixa a navbar no topo da página */
+  top: 0;
+  /* Posiciona a navbar no topo */
+  left: 0;
+  /* Posiciona a navbar no canto esquerdo */
+  width: 100%;
+  /* Define a largura da navbar como 100% da largura da tela */
+  background-color: #333;
+  /* Cor de fundo da navbar */
+  padding: 0 20px;
+  /* Espaçamento interno */
+  z-index: 1000;
+  /* Define a ordem de empilhamento para garantir que a navbar esteja sempre acima do conteúdo */
+  display: flex;
+  /* Alinha os itens horizontalmente */
+  justify-content: space-between;
+  /* Espaçamento entre os itens */
 }
 
 .home {
-  display: flex; /* Alinha os itens horizontalmente */
-  align-items: center; /* Alinha os itens verticalmente */
+  display: flex;
+  /* Alinha os itens horizontalmente */
+  align-items: center;
+  /* Alinha os itens verticalmente */
 }
 
 .login-register {
-  display: flex; /* Alinha os itens horizontalmente */
-  align-items: center; /* Alinha os itens verticalmente */
+  display: flex;
+  align-items: center;
   margin-right: 3rem;
 }
 
-.login{
+.login {
   margin-right: 2rem;
 }
 
+.logout {
+  margin-left: auto;
+  margin-right: 3rem;
+  padding: 1.5rem;
+}
+
+
 h2 {
-  margin: 0; /* Remover margem padrão */
+  margin: 0;
+  /* Remover margem padrão */
 }
 
 h2 a {
-  color: #fff; /* Cor do texto */
-  text-decoration: none; /* Remover sublinhado do link */
-  display: flex; /* Tornar o link um elemento de bloco */
-  align-items: center; /* Alinhar itens verticalmente */
+  color: #fff;
+  /* Cor do texto */
+  text-decoration: none;
+  /* Remover sublinhado do link */
+  display: flex;
+  /* Tornar o link um elemento de bloco */
+  align-items: center;
+  /* Alinhar itens verticalmente */
 }
 
 h2 a:hover {
-  color: #307cee; /* Cor do texto ao passar o mouse */
+  color: #307cee;
+  /* Cor do texto ao passar o mouse */
 }
 
 h2 a svg {
-  margin-right: 5px; /* Espaçamento entre o ícone e o texto */
+  margin-right: 5px;
+  /* Espaçamento entre o ícone e o texto */
 }

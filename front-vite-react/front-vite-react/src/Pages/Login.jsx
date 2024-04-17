@@ -1,41 +1,50 @@
 import React, { useState } from 'react';
-import '../assets/login.css'
+import { motion } from 'framer-motion';
+import '../assets/login.css';
 
 const Login = () => {
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
 
-    // Function to update the email state as the user types
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
 
-    // Function to update the password state as the user types
     const handlePasswordChange = (e) => {
         setPassword(e.target.value);
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
 
         try {
-            // Make a POST request to the login API
-            const response = await fetch("", {
+            const formData = {
+                email: email,
+                password: password
+            };
+
+            const response = await fetch("http://127.0.0.1:8000/api/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
+                body: JSON.stringify(formData)
             });
 
             if (!response.ok) {
                 throw new Error("Invalid credentials. Please try again.");
             }
 
-            console.log("Logged User:", await response.json());
-            window.location.href = "/Calendar";
+            const data = await response.json();
+            const token = data.token;
+
+            // Armazenar o token no localStorage
+            localStorage.setItem('token', token);
+
+            console.log("Logged User:", data);
+            window.location.href = "/";
         } catch (error) {
             setError(error.message);
             console.error("Authentication error", error);
@@ -43,33 +52,82 @@ const Login = () => {
     };
 
     return (
-        <div className="loginpage">
+        <motion.div
+            className="loginpage"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             <form onSubmit={handleSubmit}>
-                <h1>Login</h1>
+                <motion.h1
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    Login
+                </motion.h1>
                 <div className="form-field">
-                    <label htmlFor="email">Email</label>
-                    <input
+                    <motion.label
+                        htmlFor="email"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                    >
+                        Email
+                    </motion.label>
+                    <motion.input
                         type="email"
                         id="email"
                         value={email}
                         onChange={handleEmailChange}
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.6 }}
                     />
                 </div>
                 <div className="form-field">
-                    <label htmlFor="password">Password:</label>
-                    <input
+                    <motion.label
+                        htmlFor="password"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.8 }}
+                    >
+                        Password:
+                    </motion.label>
+                    <motion.input
                         type="password"
                         id="password"
                         value={password}
                         onChange={handlePasswordChange}
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 1 }}
                     />
                 </div>
-                {error && <div className="error-message">{error}</div>}
-                <button type="submit">Login</button>
+                {error && (
+                    <motion.div
+                        className="error-message"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 1.2 }}
+                    >
+                        {error}
+                    </motion.div>
+                )}
+                <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 1.4 }}
+                >
+                    Login
+                </motion.button>
             </form>
-        </div>
+        </motion.div>
     );
 };
 
 export default Login;
-

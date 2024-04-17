@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importe o hook useNavigate
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion'; // Importe motion do framer-motion
 
 export default function Register() {
-    const navigate = useNavigate(); // Inicialize o hook useNavigate
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
         password: ''
     });
     const [username, setUsername] = useState('');
-    const [isRegistered, setIsRegistered] = useState(false); // Estado para controlar se o registro foi concluído com sucesso
+    const [isRegistered, setIsRegistered] = useState(false);
 
     useEffect(() => {
         return () => {
-            // Limpar os campos de senha ao desmontar o componente
             setFormData(prevData => ({
                 ...prevData,
                 password: ''
@@ -52,7 +52,7 @@ export default function Register() {
             .then(data => {
                 setUsername(data.username);
                 setIsRegistered(true);
-                navigate('/'); // Redirecionar para a página inicial após o registro bem-sucedido
+                navigate('/');
             })
             .catch(error => {
                 console.error('Error registering:', error);
@@ -60,11 +60,28 @@ export default function Register() {
     };
 
     return (
-        <div className='RegisterPage'>
+        <motion.div
+            className='RegisterPage'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             <form onSubmit={handleSubmit}>
-            <h1>Register</h1>
+                <motion.h1
+                    initial={{ y: -50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                >
+                    Register
+                </motion.h1>
                 <div>
-                    <div className="form-field">
+                    <motion.div
+                        className="form-field"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                    >
                         <label htmlFor="username">Username</label>
                         <input
                             id="username"
@@ -75,9 +92,14 @@ export default function Register() {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </motion.div>
 
-                    <div className="form-field">
+                    <motion.div
+                        className="form-field"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                    >
                         <label htmlFor="email">Email</label>
                         <input
                             id="email"
@@ -89,9 +111,14 @@ export default function Register() {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </motion.div>
 
-                    <div className="form-field">
+                    <motion.div
+                        className="form-field"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 0.8 }}
+                    >
                         <label htmlFor="password">Password</label>
                         <input
                             id="password"
@@ -103,16 +130,21 @@ export default function Register() {
                             onChange={handleChange}
                             required
                         />
-                    </div>
+                    </motion.div>
 
-                    <div className="flex items-center justify-end mt-4">
+                    <motion.div
+                        className="flex items-center justify-end mt-4"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 1 }}
+                    >
                         <button className="ms-4" type="submit">Register</button>
-                    </div>
+                    </motion.div>
                 </div>
             </form>
 
             {isRegistered && <p>Cadastrado com sucesso!</p>}
             {username && <p>Username: {username}</p>}
-        </div>
+        </motion.div>
     );
 }

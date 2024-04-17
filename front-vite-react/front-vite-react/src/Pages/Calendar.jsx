@@ -1,38 +1,65 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Importando Link do React Router
-import './Css/Calendar.css'; // Arquivo de estilos
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion'; // Importando motion do framer-motion
+import './Css/Calendar.css';
 
 const CalendarHeader = ({ currentDate, prevMonth, nextMonth }) => {
     return (
-        <div className="header">
+        <motion.div
+            className="header"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             <button className="nav-btn" onClick={prevMonth}>&lt;</button>
             <h2 className="month">{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
             <button className="nav-btn" onClick={nextMonth}>&gt;</button>
-        </div>
+        </motion.div>
     );
 };
 
 const DayNames = () => {
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return (
-        <div className="day-names">
+        <motion.div
+            className="day-names"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+        >
             {dayNames.map((day, index) => (
                 <div key={index} className="day-name">{day}</div>
             ))}
-        </div>
+        </motion.div>
     );
 };
 
 const Day = ({ day }) => {
     return (
         <Link to={`/day/${day}`} className="day-link">
-            <div className="day">{day}</div>
+            <motion.div
+                className="day"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+            >
+                {day}
+            </motion.div>
         </Link>
     );
 };
 
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+        }
+    }, []);
 
     const daysInMonth = (date) => {
         return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -67,7 +94,12 @@ const Calendar = () => {
     };
 
     return (
-        <div className="calendar">
+        <motion.div
+            className="calendar"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+        >
             <div className="title">
                 <h4>Calendar</h4>
             </div>
@@ -76,9 +108,8 @@ const Calendar = () => {
             <div className="days">
                 {renderDays()}
             </div>
-        </div>
+        </motion.div>
     );
 };
-
 
 export default Calendar;
