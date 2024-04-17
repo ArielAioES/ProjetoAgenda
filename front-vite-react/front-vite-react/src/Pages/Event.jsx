@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Importe useNavigate para a navegação
+import { motion } from 'framer-motion';
 
 const Event = () => {
     const [title, setTitle] = useState('');
@@ -8,11 +8,10 @@ const Event = () => {
     const [time, setTime] = useState('');
     const [duration, setDuration] = useState('');
     const [description, setDescription] = useState('');
-    const navigate = useNavigate(); // Use useNavigate para a navegação
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aqui você pode enviar os dados para o backend ou fazer o que for necessário com eles
         console.log({ title, date, time, duration, description });
     };
 

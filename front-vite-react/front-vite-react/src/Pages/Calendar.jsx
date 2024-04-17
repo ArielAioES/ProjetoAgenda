@@ -1,57 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Importando motion do framer-motion
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import { motion } from 'framer-motion';
+
 import './Css/Calendar.css';
 
-const CalendarHeader = ({ currentDate, prevMonth, nextMonth }) => {
-    return (
-        <motion.div
-            className="header"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-        >
-            <button className="nav-btn" onClick={prevMonth}>&lt;</button>
-            <h2 className="month">{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
-            <button className="nav-btn" onClick={nextMonth}>&gt;</button>
-        </motion.div>
-    );
-};
-
-const DayNames = () => {
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    return (
-        <motion.div
-            className="day-names"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-        >
-            {dayNames.map((day, index) => (
-                <div key={index} className="day-name">{day}</div>
-            ))}
-        </motion.div>
-    );
-};
-
-const Day = ({ day }) => {
-    return (
-        <Link to={`/day/${day}`} className="day-link">
-            <motion.div
-                className="day"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-            >
-                {day}
-            </motion.div>
-        </Link>
-    );
-};
-
 const Calendar = () => {
-    const [currentDate, setCurrentDate] = useState(new Date());
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -59,56 +14,64 @@ const Calendar = () => {
         if (!token) {
             navigate('/login');
         }
-    }, []);
 
-    const daysInMonth = (date) => {
-        return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+        fetchUser();
+    }, [navigate]);
+
+    const fetchUser = () => {
+        fetch("http://127.0.0.1:8000/api/user/events/{id}", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        console.log('atualizou');
     };
 
-    const firstDayOfMonth = (date) => {
-        return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-    };
-
-    const renderDays = () => {
-        const days = [];
-        const totalDays = daysInMonth(currentDate);
-        const firstDay = firstDayOfMonth(currentDate);
-
-        for (let i = 0; i < firstDay; i++) {
-            days.push(<div key={`empty-${i}`} className="empty"></div>);
-        }
-
-        for (let day = 1; day <= totalDays; day++) {
-            days.push(<Day key={day} day={day} />);
-        }
-
-        return days;
-    };
-
-    const prevMonth = () => {
-        setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() - 1));
-    };
-
-    const nextMonth = () => {
-        setCurrentDate(prevDate => new Date(prevDate.getFullYear(), prevDate.getMonth() + 1));
+    const handleEventClick = (info) => {
+        navigate(`/event/${info.event.id}`);
+        console.log('Evento clicado:', info.event.id);
     };
 
     return (
         <motion.div
-            className="calendar"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-        >
-            <div className="title">
-                <h4>Calendar</h4>
-            </div>
-            <CalendarHeader currentDate={currentDate} prevMonth={prevMonth} nextMonth={nextMonth} />
-            <DayNames />
-            <div className="days">
-                {renderDays()}
+            className="calendar-container"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}>
+            <div className="calendar-wrapper">
+                <FullCalendar
+                    plugins={[dayGridPlugin]}
+                    initialView="dayGridMonth"
+                    events={[
+                        { id: '1', title: 'Evento 1', date: '2024-04-01' },
+                        { id: '2', title: 'Evento 2', date: '2024-07-24' }
+                    ]}
+                    eventClick={handleEventClick}
+                    eventContent={renderEventContent}
+                    dayCellContent={renderDayCellContent}
+                />
             </div>
         </motion.div>
+    );
+};
+
+const renderEventContent = (eventInfo) => {
+    return (
+        <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+        >
+            <div>{eventInfo.event.title}</div>
+        </motion.div>
+    );
+};
+
+const renderDayCellContent = (cellInfo) => {
+    return (
+        <div className="day-cell">
+            {cellInfo.dayNumberText}
+        </div>
     );
 };
 

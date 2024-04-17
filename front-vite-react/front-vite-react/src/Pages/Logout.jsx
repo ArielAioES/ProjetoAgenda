@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Importe motion do framer-motion
+import { motion } from 'framer-motion';
 
 const Logout = () => {
     const [loading, setLoading] = useState(false);
@@ -9,7 +9,7 @@ const Logout = () => {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (!token) {
-            navigate('/login'); // Redirecionar para a página de login se o token não estiver presente
+            navigate('/login');
         }
     }, [navigate]);
 
@@ -19,7 +19,7 @@ const Logout = () => {
         fetch('http://127.0.0.1:8000/api/logout', {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}` // Inclui o token de autorização no cabeçalho
+                'Authorization': `Bearer ${localStorage.getItem('token')}` 
             }
         })
         .then(response => {
@@ -36,7 +36,6 @@ const Logout = () => {
         })
         .catch(error => {
             console.error('Error logging out:', error);
-            // Trate o erro conforme necessário, como exibir uma mensagem de erro para o usuário
         })
         .finally(() => setLoading(false));
     };

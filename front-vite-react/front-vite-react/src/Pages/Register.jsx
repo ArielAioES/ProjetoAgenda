@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion'; // Importe motion do framer-motion
+import { motion } from 'framer-motion';
 
 export default function Register() {
     const navigate = useNavigate();

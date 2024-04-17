@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-import '../Pages/Css/Home.css'; // Arquivo de estilos
+import '../Pages/Css/Home.css';
 
 function Home() {
   const token = localStorage.getItem('token');
