@@ -1,44 +1,30 @@
 import React from 'react';
-import {Menubar} from 'primereact/menubar';
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Home () {
+import './Css/Home.css'; // Arquivo de estilos
 
-    const [count, setCount] = useState(0);
-    const navigate = useNavigate(); 
-  
-    const menuitems = [
-      {
-        label: 'Home',
-        icon: 'pi pi-fw pi-home',
-        command: () => navigate('/') 
-      },
-      {
-        label: 'Login /',
-        icon: 'pi pi-fw pi-user',
-        command: () => navigate('/login')
-      },
-      {
-        label: '/ Register',
-        command: () => navigate('/register')
-      },
-    ];
+function Home() {
+  const navigate = useNavigate();
 
-    return (
-    <div className="title">
-        <Menubar model={menuitems} />
-      <header/>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+  const handleCalendarClick = () => {
+    navigate('/calendar');
+  };
+  const handleEventClick = () => {
+    navigate('/event');
+  };
+
+  return (
+    <div className="home-container">
+      <div className="home-content">
+        <h1>Welcome to Your Agenda</h1>
+        <p>This is your personal agenda where you can organize your tasks, events, and appointments.</p>
+        <p>Use the navigation bar above to access different sections of the application.</p>
+        <p>If you haven't registered yet, click on the "Register" link to create an account.</p>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <button onClick={handleEventClick}>Go to create a new event</button>
+      <button className='calendar' onClick={handleCalendarClick}>Go to Calendar</button>
     </div>
-    )
+  );
 }
 
 export default Home;

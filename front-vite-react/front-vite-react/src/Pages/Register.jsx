@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-
-
+import { useNavigate } from 'react-router-dom'; // Importe o hook useNavigate
 
 export default function Register() {
+    const navigate = useNavigate(); // Inicialize o hook useNavigate
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -47,21 +47,22 @@ export default function Register() {
                 if (!response.ok) {
                     throw new Error('Registration failed');
                 }
-                return response.json(); // Parse the response body as JSON
+                return response.json();
             })
             .then(data => {
                 setUsername(data.username);
-                setIsRegistered(true); // Definir isRegistered como verdadeiro quando o registro for bem-sucedido
+                setIsRegistered(true);
+                navigate('/'); // Redirecionar para a página inicial após o registro bem-sucedido
             })
             .catch(error => {
                 console.error('Error registering:', error);
-                // Adicione lógica de tratamento de erro aqui, como exibir uma mensagem de erro para o usuário
             });
     };
 
     return (
         <div className='RegisterPage'>
             <form onSubmit={handleSubmit}>
+            <h1>Register</h1>
                 <div>
                     <div className="form-field">
                         <label htmlFor="username">Username</label>
@@ -110,8 +111,8 @@ export default function Register() {
                 </div>
             </form>
 
-            {isRegistered && <p>Cadastrado com sucesso!</p>} {/* Exibir mensagem se o registro for bem-sucedido */}
-            {username && <p>Username: {username}</p>} {/* Exibir o nome de usuário se estiver disponível */}
+            {isRegistered && <p>Cadastrado com sucesso!</p>}
+            {username && <p>Username: {username}</p>}
         </div>
     );
 }

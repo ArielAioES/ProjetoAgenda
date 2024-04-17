@@ -28,6 +28,7 @@
 
 .month {
     font-size: 18px;
+    display: inline;
 }
 
 .day-names {
