@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'; // Importe motion do framer-motion
 
 const Logout = () => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login'); // Redirecionar para a página de login se o token não estiver presente
+        }
+    }, [navigate]);
 
     const handleLogout = () => {
         setLoading(true);
@@ -18,8 +25,10 @@ const Logout = () => {
         .then(response => {
             if (response.ok) {
                 // Limpa o token do localStorage
+                localStorage.removeItem('id');
+                localStorage.removeItem('username');
+                localStorage.removeItem('email');
                 localStorage.removeItem('token');
-                // Redireciona para a página de login
                 navigate('/');
             } else {
                 throw new Error('Logout failed');

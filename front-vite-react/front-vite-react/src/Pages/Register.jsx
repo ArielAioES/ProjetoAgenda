@@ -52,7 +52,7 @@ export default function Register() {
             .then(data => {
                 setUsername(data.username);
                 setIsRegistered(true);
-                navigate('/');
+                navigate('/login');
             })
             .catch(error => {
                 console.error('Error registering:', error);

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaHome } from "react-icons/fa";
+import { FaHome, FaUserCircle  } from "react-icons/fa"
 import './Navbar.css'; // Arquivo de estilos
 
 function Navbar() {
@@ -15,9 +15,11 @@ function Navbar() {
                 </h2>
             </div>
             {token ? ( // Verifica se o token existe
-                <div className="logout">
+                <div className="details-user">
                     <h2>
-                        <Link to="/logout">Sair</Link>
+                        <Link to="/user">
+                            <FaUserCircle  /><p className="my-accont"></p>
+                        </Link>
                     </h2>
                 </div>
             ) : (

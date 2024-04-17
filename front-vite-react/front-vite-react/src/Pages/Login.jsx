@@ -6,6 +6,7 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -18,6 +19,7 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         try {
             const formData = {
@@ -38,9 +40,13 @@ const Login = () => {
             }
 
             const data = await response.json();
+            const username = data.username;
+            const id = data.id;
             const token = data.token;
 
-            // Armazenar o token no localStorage
+            localStorage.setItem('id', id);
+            localStorage.setItem('username', username);
+            localStorage.setItem('email', email);
             localStorage.setItem('token', token);
 
             console.log("Logged User:", data);
@@ -48,6 +54,8 @@ const Login = () => {
         } catch (error) {
             setError(error.message);
             console.error("Authentication error", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -118,12 +126,13 @@ const Login = () => {
                 <motion.button
                     type="submit"
                     whileHover={{ scale: 1.1 }}
+                    disabled={loading}
                     whileTap={{ scale: 0.9 }}
                     initial={{ y: 50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 1.4 }}
                 >
-                    Login
+                    {loading ? 'Logging...' : 'Login'}
                 </motion.button>
             </form>
         </motion.div>

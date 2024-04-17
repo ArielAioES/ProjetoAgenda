@@ -5,6 +5,7 @@ import Home from '../Pages/Home';
 import Calendar from "../Pages/Calendar";
 import Event from "../Pages/Event";
 import Logout from "../Pages/Logout";
+import User from "../Pages/User";
 import App from "../App";
 
 const AppRoutes = () => {
@@ -17,6 +18,7 @@ const AppRoutes = () => {
                     <Route path="/register" element={<Register />} />
                     <Route path="/calendar" element={<Calendar />} />
                     <Route path="/event" element={<Event />} />
+                    <Route path="/User" element={<User />} />
                     <Route path="/logout" element={<Logout />} />
                 </Route>
             </Routes>
