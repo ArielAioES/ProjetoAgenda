@@ -1,60 +1,74 @@
-.calendar {
-    font-family: Arial, sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
-    width: 300px;
-    margin: 0 auto;
+.calendar-container {
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-.title {
-    text-align: center;
-    margin-bottom: 20px;
+.fc-toolbar {
+  background-color: var(--cor-primaria);
+  color: #fff;
+  padding: 20px;
 }
 
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+.fc-prev-button,
+.fc-next-button {
+  background-color: transparent;
+  color: #fff;
+  border: none;
+  font-size: 1.5em;
 }
 
-.nav-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
+.fc-toolbar h2 {
+  margin: 0;
+  font-size: 2em;
 }
 
-.month {
-    font-size: 18px;
-    display: inline;
+.fc-day-header {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
-.day-names {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    margin-bottom: 10px;
+.fc-day {
+  border: none;
 }
 
-.day-name {
-    text-align: center;
-    font-weight: bold;
+.fc-day-number {
+  font-size: 1.2em;
 }
 
-.days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
+.fc-event {
+  background-color: var(--cor-primaria);
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+
+  cursor: pointer;
 }
 
-.day {
-    text-align: center;
-    padding: 5px;
-    border-radius: 5px;
-    cursor: pointer;
+.fc-title {
+  font-size: 1em;
+
 }
 
-.empty {
-    visibility: hidden;
+.day-cell {
+  font-size: 20px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--cor-primaria);
+}
+
+.calendar-container {
+  margin-top: 3.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.calendar-wrapper {
+  width: 100vh;
+  height: 100%;
 }

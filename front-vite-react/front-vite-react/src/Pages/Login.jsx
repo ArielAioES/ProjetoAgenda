@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+
+import { API_URL } from '../Components/config';
+
 import '../assets/login.css';
 
 const Login = () => {
@@ -27,7 +30,7 @@ const Login = () => {
                 password: password
             };
 
-            const response = await fetch("http://127.0.0.1:8000/api/login", {
+            const response = await fetch(`${API_URL}/api/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -49,11 +52,9 @@ const Login = () => {
             localStorage.setItem('email', email);
             localStorage.setItem('token', token);
 
-            console.log("Logged User:", data);
             window.location.href = "/";
         } catch (error) {
             setError(error.message);
-            console.error("Authentication error", error);
         } finally {
             setLoading(false);
         }

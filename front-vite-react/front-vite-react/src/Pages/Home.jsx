@@ -1,12 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { atom, useAtom } from 'jotai';
 
-import '../Pages/Css/Home.css'; // Arquivo de estilos
+import '../Pages/Css/Home.css';
 
-function Home() {
-  const token = localStorage.getItem('token');
-  const navigate = useNavigate();
+
+const Home = () => {
+  const tokenAtom = atom(localStorage.getItem('token') || '');
+  const [token] = useAtom(tokenAtom); // Obtendo o token do átomo
+  const navigate = useNavigate()
+
 
   const handleCalendarClick = () => {
     navigate('/calendar');
