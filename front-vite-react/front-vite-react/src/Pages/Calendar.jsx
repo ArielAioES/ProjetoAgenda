@@ -1,36 +1,39 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { motion } from 'framer-motion';
+import { atom, useAtom } from 'jotai';
+
+import { API_URL } from '../Components/config';
+
 
 import './Css/Calendar.css';
 
+
 const Calendar = () => {
+    // Criando um átomo para armazenar o token
+    const tokenAtom = atom(localStorage.getItem('token') || '');
+    const [token] = useAtom(tokenAtom); // Obtendo o token do átomo
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login');
-        }
-
-        fetchUser();
-    }, [navigate]);
+    // Verifica se há um token ao montar o componente
+    if (!token) {
+        navigate('/login');
+    }
 
     const fetchUser = () => {
-        fetch("http://127.0.0.1:8000/api/user/events/{id}", {
+        fetch(`${API_URL}/api/user/events/{id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
             },
         });
-        console.log('atualizou');
     };
 
     const handleEventClick = (info) => {
         navigate(`/event/${info.event.id}`);
-        console.log('Evento clicado:', info.event.id);
     };
 
     return (

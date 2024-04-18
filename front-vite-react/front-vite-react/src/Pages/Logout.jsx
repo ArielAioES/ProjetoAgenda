@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { atom, useAtom } from 'jotai';
+
+import { API_URL } from '../Components/config';
+
 
 const Logout = () => {
+    const tokenAtom = atom(localStorage.getItem('token') || '');
+    const [token] = useAtom(tokenAtom);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login');
-        }
-    }, [navigate]);
-
-    const handleLogout = () => {
+    const handleLogout = async () => {
         setLoading(true);
-        // Faz a requisição para a API para efetuar o logout
-        fetch('http://127.0.0.1:8000/api/logout', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}` 
-            }
-        })
-        .then(response => {
+        try {
+            const response = await fetch(`${API_URL}/api/logout`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
             if (response.ok) {
-                // Limpa o token do localStorage
                 localStorage.removeItem('id');
                 localStorage.removeItem('username');
                 localStorage.removeItem('email');
@@ -33,12 +30,16 @@ const Logout = () => {
             } else {
                 throw new Error('Logout failed');
             }
-        })
-        .catch(error => {
+        } catch (error) {
             console.error('Error logging out:', error);
-        })
-        .finally(() => setLoading(false));
+        } finally {
+            setLoading(false);
+        }
     };
+
+    if (!token) {
+        navigate('/login');
+    }
 
     return (
         <motion.div

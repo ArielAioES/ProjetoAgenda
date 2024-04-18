@@ -3,7 +3,7 @@ import Navbar from '../src/Components/Navbar.jsx';
 
 import './App.css';
 
-function App() {
+const App = () => {
 
   return (
     <div className="App">

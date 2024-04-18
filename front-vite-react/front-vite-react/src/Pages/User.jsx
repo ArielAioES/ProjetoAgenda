@@ -1,25 +1,31 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { atom, useAtom } from 'jotai';
+
+import { API_URL } from '../Components/config';
 
 import '../Pages/Css/User.css';
 
-function User() {
-    const id = localStorage.getItem('id');
+const User = () => {
+    const userAtom = atom({ // Criando um único átomo para armazenar todas as informações do usuário
+        token: localStorage.getItem('token') || '',
+        id: localStorage.getItem('id') || '',
+        username: localStorage.getItem('username') || '',
+        email: localStorage.getItem('email') || ''
+    });
+    const [user] = useAtom(userAtom);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login'); // Redirecionar para a página de login se o token não estiver presente
-        }
-    }, [navigate]);
+    if (!user.token) {
+        navigate('/login')
+    }
 
     const handleDeleteAccount = async () => {
         const confirmation = window.confirm("Você tem certeza que deseja deletar sua conta?");
         if (confirmation) {
             try {
-                const response = await fetch(`http://127.0.0.1:8000/api/user/${id}`, {
+                const response = await fetch(`${API_URL}/api/user/${user.id}`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -36,7 +42,6 @@ function User() {
                 localStorage.removeItem('email');
                 localStorage.removeItem('token');
 
-                console.log("Conta deletada com sucesso.");
                 navigate('/'); // Redirecionar o usuário para a página inicial após a deleção da conta
             } catch (error) {
                 console.error("Erro ao deletar a conta:", error);
@@ -49,30 +54,30 @@ function User() {
     };
 
     return (
-        <motion.div 
+        <motion.div
             className="user-container"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
         >
             <div className='name-email'>
-                <motion.h2 
+                <motion.h2
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    Name: {localStorage.getItem('username')}
+                    Name: {user.username}
                 </motion.h2>
-                <motion.h2 
+                <motion.h2
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    Email: {localStorage.getItem('email')}
+                    Email: {user.email}
                 </motion.h2>
             </div>
 
-            <motion.button 
+            <motion.button
                 onClick={handleDeleteAccount}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -82,8 +87,8 @@ function User() {
             >
                 Delete account
             </motion.button>
-            <motion.button 
-                className='leave' 
+            <motion.button
+                className='leave'
                 onClick={handleLogout}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}

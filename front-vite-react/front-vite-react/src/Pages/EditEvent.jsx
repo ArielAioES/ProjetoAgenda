@@ -1,4 +1,4 @@
-function EditEvent(){
+const EditEvent = () =>{
 
     return(
         <div>

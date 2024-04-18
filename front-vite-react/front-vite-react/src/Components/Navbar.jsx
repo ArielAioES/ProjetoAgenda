@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
-import { FaHome, FaUserCircle  } from "react-icons/fa"
-import './Navbar.css'; // Arquivo de estilos
+import { FaHome, FaUserCircle } from "react-icons/fa"
+import { atom, useAtom } from 'jotai';
 
-function Navbar() {
-    const token = localStorage.getItem('token'); // Obtém o token do localStorage
+import './Navbar.css';
+
+const Navbar = () => {
+    const tokenAtom = atom(localStorage.getItem('token') || '');
+    const [token] = useAtom(tokenAtom); // Obtendo o token do átomo
 
     return (
         <nav>
@@ -18,7 +21,7 @@ function Navbar() {
                 <div className="details-user">
                     <h2>
                         <Link to="/user">
-                            <FaUserCircle  /><p className="my-accont"></p>
+                            <FaUserCircle /><p className="my-accont"></p>
                         </Link>
                     </h2>
                 </div>

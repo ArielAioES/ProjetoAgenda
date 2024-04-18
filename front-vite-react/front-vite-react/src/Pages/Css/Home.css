@@ -6,6 +6,10 @@
     margin-top: 2rem;
 }
 
+button:hover {
+    background-color: var(--cor-primaria);
+}
+
 .title-home {
-    color: rgb(0, 139, 253);
+    color: var(--cor-primaria);
 }

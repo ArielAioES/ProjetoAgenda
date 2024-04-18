@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
-export default function Register() {
+import { API_URL } from '../Components/config';
+
+const Register = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -11,15 +14,6 @@ export default function Register() {
     });
     const [username, setUsername] = useState('');
     const [isRegistered, setIsRegistered] = useState(false);
-
-    useEffect(() => {
-        return () => {
-            setFormData(prevData => ({
-                ...prevData,
-                password: ''
-            }));
-        };
-    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -32,7 +26,7 @@ export default function Register() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch('http://127.0.0.1:8000/api/user', {
+        fetch(`${API_URL}/api/user`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +49,13 @@ export default function Register() {
                 navigate('/login');
             })
             .catch(error => {
-                console.error('Error registering:', error);
+                setError(error.message);
+            })
+            .finally(() => {
+                setFormData(prevData => ({
+                    ...prevData,
+                    password: ''
+                }));
             });
     };
 
@@ -141,6 +141,16 @@ export default function Register() {
                         <button className="ms-4" type="submit">Register</button>
                     </motion.div>
                 </div>
+                {error && (
+                    <motion.div
+                        className="error-message"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 1.2 }}
+                    >
+                        {error}
+                    </motion.div>
+                )}
             </form>
 
             {isRegistered && <p>Cadastrado com sucesso!</p>}
@@ -148,3 +158,5 @@ export default function Register() {
         </motion.div>
     );
 }
+
+export default Register;
