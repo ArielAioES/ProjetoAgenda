@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { atom, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 
+import { idAtom, usernameAtom, emailAtom, tokenAtom } from '../Components/atoms/atoms';
 import { API_URL } from '../Components/config';
 
-
 const Logout = () => {
-    const tokenAtom = atom(localStorage.getItem('token') || '');
-    const [token] = useAtom(tokenAtom);
+    const [token, setToken] = useAtom(tokenAtom);
+    const [id, setId] = useAtom(idAtom);
+    const [username, setUsername] = useAtom(usernameAtom);
+    const [email, setEmail] = useAtom(emailAtom);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -18,14 +20,16 @@ const Logout = () => {
             const response = await fetch(`${API_URL}/api/logout`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${token}`
                 }
             });
             if (response.ok) {
-                localStorage.removeItem('id');
-                localStorage.removeItem('username');
-                localStorage.removeItem('email');
-                localStorage.removeItem('token');
+                // Limpe os átomos diretamente
+                setId(null);
+                setUsername(null);
+                setEmail(null);
+                setToken(null);
+
                 navigate('/');
             } else {
                 throw new Error('Logout failed');

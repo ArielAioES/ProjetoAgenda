@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useAtom } from 'jotai';
 
+import { idAtom, usernameAtom, emailAtom, tokenAtom } from '../Components/atoms/atoms';
 import { API_URL } from '../Components/config';
+
 
 import '../assets/login.css';
 
@@ -10,6 +13,11 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+
+    const [id, setId] = useAtom(idAtom);
+    const [username, setUsername] = useAtom(usernameAtom);
+    const [emailAtomValue, setEmailAtomValue] = useAtom(emailAtom);
+    const [token, setToken] = useAtom(tokenAtom);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -43,14 +51,12 @@ const Login = () => {
             }
 
             const data = await response.json();
-            const username = data.username;
-            const id = data.id;
-            const token = data.token;
+            const { username, id, token } = data;
 
-            localStorage.setItem('id', id);
-            localStorage.setItem('username', username);
-            localStorage.setItem('email', email);
-            localStorage.setItem('token', token);
+            setId(id);
+            setUsername(username);
+            setEmailAtomValue(email);
+            setToken(token);
 
             window.location.href = "/";
         } catch (error) {

@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { motion } from 'framer-motion';
-import { atom, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
+
+import { tokenAtom } from '../Components/atoms/atoms';
+
 
 import { API_URL } from '../Components/config';
 
@@ -12,8 +15,6 @@ import './Css/Calendar.css';
 
 
 const Calendar = () => {
-    // Criando um átomo para armazenar o token
-    const tokenAtom = atom(localStorage.getItem('token') || '');
     const [token] = useAtom(tokenAtom); // Obtendo o token do átomo
     const navigate = useNavigate();
 

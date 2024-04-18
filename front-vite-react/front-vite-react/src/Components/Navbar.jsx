@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { FaHome, FaUserCircle } from "react-icons/fa"
-import { atom, useAtom } from 'jotai';
+import { useAtom } from 'jotai'
+
+import { tokenAtom } from '../Components/atoms/atoms';
+;
 
 import './Navbar.css';
 
 const Navbar = () => {
-    const tokenAtom = atom(localStorage.getItem('token') || '');
     const [token] = useAtom(tokenAtom); // Obtendo o token do átomo
 
     return (

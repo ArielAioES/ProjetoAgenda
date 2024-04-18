@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { atom, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
+
+import { tokenAtom } from '../Components/atoms/atoms';
+
 
 const Event = () => {
-    const tokenAtom = atom(localStorage.getItem('token') || '');
     const [token] = useAtom(tokenAtom);
     const [formData, setFormData] = useState({
         title: '',
