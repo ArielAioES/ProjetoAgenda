@@ -8,30 +8,30 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-        //Listar todos os usuários
+        // List all users
         public function index()
     {
         $users = User::all();
 
-        //Retornar os usuários cadastrados
+        // Return the list of registered users
         return response()->json($users, 200);
     }
 
-        //Listar um usuário específico
+        // Show a specific user
         public function show($id){
 
             $user = User::find($id);
 
-            //Validação caso não encontre o usuário específico
+            // Validation in case the specific user is not found
             if(!$user){
-                return response()->json(["error" => "Usuário não encontrado"], 404);
+                return response()->json(["error" => "User not found"], 404);
             }
 
-            //Retorna o usuário selecionado
+            // Return the selected user
             return response()->json($user, 200);
         } 
 
-        //Cadastrar um novo usuário
+        // Register a new user
         public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -39,31 +39,31 @@ class UserController extends Controller
             "email" => "required|email",
             "password" => "required|string|min:6",
         ],[
-            'email.required' =>'O campo de email é obrigatório',
-            'email.email' =>'O email deve ser válido',
-            'password.required' =>'O campo de senha é obrigatório',
-            'password.min' =>'O campo de senha deve ter no mínimo :min caracteres',
+            'email.required' =>'The email field is required',
+            'email.email' =>'The email must be valid',
+            'password.required' =>'The password field is required',
+            'password.min' =>'The password field must be at least :min characters',
         ]);
 
-        // Verifica se o e-mail já está cadastrado
+        // Check if the email is already registered
         $existingUser = User::where('email', $validatedData['email'])->first();
         if ($existingUser) {
-            //Retorna mensagem de error, caso dê errado
-            return response()->json(["error" => "Usuário existente"], 400);
+            // Return error message if failed
+            return response()->json(["error" => "User already exists"], 400);
         }
 
-        // Cria o usuário se o e-mail não estiver cadastrado
+        // Create the user if the email is not registered
         $user = User::create([
             "username" => $validatedData["username"],
             "email" => $validatedData["email"],
             "password" => bcrypt($validatedData["password"]),
         ]);
 
-        //Retorna mensagem de sucesso, caso seja cadastrado
-        return response()->json(["message" => "Usuário cadastrado com sucesso"], 201);
+        // Return success message if created
+        return response()->json(["message" => "User registered successfully"], 201);
     }
 
-        //Atualizar usuário cadastrado
+        // Update registered user
         public function update(Request $request, $id){
 
             $validatedData = $request->validate([
@@ -71,17 +71,16 @@ class UserController extends Controller
                 "email" => "required|email",
                 "password" => "required|string|min:6",
             ],[
-                'email.required' =>'O campo de email é obrigatório',
-                'email.email' =>'O email deve ser válido',
-                'password.required' =>'O campo de senha é obrigatório',
-                'password.min' =>'O campo de senha deve ter no mínimo :min caracteres',
+                'email.required' =>'The email field is required',
+                'email.email' =>'The email must be valid',
+                'password.required' =>'The password field is required',
+                'password.min' =>'The password field must be at least :min characters',
             ]);
 
-            // Verifica se o e-mail já está cadastrado
+            // Check if the email is already registered
             $existingUser = User::where('email', $validatedData['email'])->first();
             if ($existingUser) {
-            //Retorna mensagem de error, caso dê errado
-            return response()->json(["error" => "Email existente"], 400);
+            return response()->json(["error" => "Email already exists"], 400);
         }
 
             $user = User::findOrFail($id);
@@ -92,21 +91,31 @@ class UserController extends Controller
                 "password"=> bcrypt($validatedData["password"]),
             ]);
 
-            //Retorna mensagem de sucesso, caso seja cadastrado
-            return response()->json(["message"=> "Usuário atualizado com sucesso"],200);
+            return response()->json(["message"=> "User updated successfully"],200);
         }
 
-        //Deletar um usuário específico
+        // Delete a specific user
         public function destroy($id){
             $user = User::find($id);
 
             if (!$user) {
-                //Retorna mensagem de error
-                return response()-> json(["error"=> "Usuário não encontrado"],404);
+                return response()-> json(["error"=> "User not found"],404);
             }
 
             $user->delete();
-            //Retorna mesagem de sucesso
-            return response()->json(["message"=> "Usuário deletado com sucesso"],200);
+            return response()->json(["message"=> "User deleted successfully"],200);
         }
+
+        // Relation method to get user events
+        public function events()
+        {
+            return $this->belongsToMany(EventController::class);
+        }
+
+        // Relation method to get user relationships
+        public function users()
+        {
+            return $this->belongsToMany(User::class);
+        }
+
 }

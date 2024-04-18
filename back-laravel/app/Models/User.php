@@ -42,13 +42,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function eventes()
-    {
-        return $this->hasMany(Event::class);
-    }
-
     public function events()
     {
-    return $this->belongsToMany(Event::class);
+    return $this->belongsToMany(Event::class); //used to define a many-to-many relationship between the User and Event models
     }
 }

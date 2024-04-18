@@ -10,7 +10,10 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
+        // Extract email and password from the request
         $credentials = request(['email', 'password']);
+
+        // Attempt to authenticate the user using the provided credentials
         if(!Auth::attempt($credentials)){
 
             $error = "Not authorized";
@@ -25,11 +28,13 @@ class LoginController extends Controller
         $response['username']= $user->username;
         $response['email']= $user->email;
         $response['token']= $user->createToken('token')->accessToken;
+        // Return a success response with user information and access token
         return response()->json($response, 200);
     }
 
     public function logout(Request $request)
     {
+        // Revoke the access token associated with the authenticated user
         $isUser = $request->user()->token()->revoke();
         if($isUser){
             $response['message'] = "Logout successful";
@@ -40,45 +45,19 @@ class LoginController extends Controller
             return response()->json($response, 404);
         }
     }
-}
-    /*
-    //Logar em alguma conta
-    public function store(Request $request)
+    protected function authenticated(Request $request, $user)
     {
-        // Validação dos dados recebidos do formulário
-        $validatedData = $request->validate([
-            "email" => "required|email",
-            "password" => "required|string|min:6",
-        ], [
-            'email.required' => 'O campo de email é obrigatório',
-            'email.email' => 'O email deve ser válido',
-            'password.required' => 'O campo de senha é obrigatório',
-            'password.min' => 'O campo de senha deve ter no mínimo :min caracteres',
-        ]);
+        // Check if there's an event ID in the session
+        if ($event_id = session('event_id')) {
+            // If an event ID is found, remove it from the session
+            session()->forget('event_id');
 
-        // Tentativa de autenticação do usuário
-        $credentials = $request->only('email', 'password');
-        if (!Auth::attempt($credentials)) {
-            // Retorna mensagem de erro se a autenticação falhar
-            return response()->json(['error' => 'Email ou senha inválido'], 400);
+            // Redirect the user to the event page associated with the event ID
+            return redirect()->route('event.show', $event_id);
         }
 
-        // Obtém o usuário autenticado
-        $user = Auth::user();
-
-        // Gera um token de acesso para o usuário
-        $accessToken = $user->createToken('AccessToken')->accessToken;
-
-        // Retorna uma resposta JSON com a mensagem de sucesso e o token de acesso
-        return response()->json(['success' => 'Logado', 'token' => $accessToken], 200);
+        // If no event ID is found in the session, redirect to the homepage
+        return redirect('/');
     }
-
-    //Deslogar da sessão atual
-    public function destroy()
-    {
-        Auth::logout();
-        
-        // Retorna mensagem de sucesso
-        return response()->json(['message' => 'Deslogado'], 200);
-    }
-}*/
+}
+    
