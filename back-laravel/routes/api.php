@@ -14,12 +14,14 @@ Route::middleware(['guest:api'])->group(function () { //guest:nao precisa estar 
     Route::post('login', [LoginController::class, 'login']); // Usar array para chamar o método do controlador
 });
 
+Route::apiResource('/user', UserController::class);
+
 Route::middleware(['auth:api'])->group(function () { //auth: necessita da autenticacao feita no login para ser acessada
     Route::get('/data', function() {
         return 'Olá mundo API (Autenticado)';
     });
-    Route::apiResource('/user', UserController::class);
     Route::post('/event', [EventController::class,'store']);
+    Route::get('/event/{id}', [EventController::class,'show']);
     Route::post('logout', [LoginController::class, 'logout']); 
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create');

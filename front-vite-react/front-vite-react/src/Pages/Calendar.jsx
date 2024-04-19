@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -7,30 +7,43 @@ import { useAtom } from 'jotai';
 
 import { tokenAtom } from '../Components/atoms/atoms';
 
-
 import { API_URL } from '../Components/config';
-
 
 import './Css/Calendar.css';
 
-
 const Calendar = () => {
-    const [token] = useAtom(tokenAtom); // Obtendo o token do átomo
+    const [token] = useAtom(tokenAtom);
+    const [events, setEvents] = useState([]);
     const navigate = useNavigate();
 
-    // Verifica se há um token ao montar o componente
-    if (!token) {
-        navigate('/login');
-    }
+    useEffect(() => {
+        if (!token) {
+            navigate('/login');
+            return;
+        }
 
-    const fetchUser = () => {
-        fetch(`${API_URL}/api/user/events/{id}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
-            },
-        });
+        fetchEvents();
+    }, [token, navigate]);
+
+    const fetchEvents = async () => {
+        try {
+            const response = await fetch(`${API_URL}/api/events`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch events');
+            }
+
+            const data = await response.json();
+            setEvents(data);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const handleEventClick = (info) => {
@@ -42,15 +55,17 @@ const Calendar = () => {
             className="calendar-container"
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}>
+            transition={{ duration: 0.5 }}
+        >
             <div className="calendar-wrapper">
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"
-                    events={[
-                        { id: '1', title: 'Evento 1', date: '2024-04-01' },
-                        { id: '2', title: 'Evento 2', date: '2024-07-24' }
-                    ]}
+                    events={events.map(event => ({
+                        id: event.id,
+                        title: event.title,
+                        date: event.date
+                    }))}
                     eventClick={handleEventClick}
                     eventContent={renderEventContent}
                     dayCellContent={renderDayCellContent}

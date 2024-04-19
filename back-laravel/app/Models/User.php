@@ -42,12 +42,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function eventes()
+    public function events()
     {
         return $this->hasMany(Event::class);
     }
 
-    public function events()
+    public function eventsAsParticipant()
     {
     return $this->belongsToMany(Event::class);
     }

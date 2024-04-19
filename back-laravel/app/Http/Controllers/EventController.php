@@ -14,11 +14,14 @@ class EventController extends Controller
     {
         try {
             $events = Event::all();
-            return view('events.index', compact('events'));
+
+            return $events;
+            
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to fetch events: ' . $e->getMessage());
+            return $e->getMessage();
         }
     }
+
 
     public function create()
     {
@@ -35,21 +38,44 @@ class EventController extends Controller
                 'duration' => 'required',
                 'description' => 'required',
             ]);
-
-            Event::create([
-                'title' => $request->title,
+    
+            $user = $request->user();
+    
+            $eventData = [
+                'title' => $request->title, 
                 'date' => $request->date,
                 'time' => $request->time,
                 'duration' => $request->duration,
                 'description' => $request->description,
+            ];
+    
+            $eventCreated = Event::create($eventData);
+            
+            $eventCreated->users()->attach($user->id);
+            
+            return response()->json([
+                'message' => 'Event created successfully.',
+                'event' => $eventCreated,
             ]);
-
-            return redirect()->route('events.index')
-                ->with('success', 'Event created successfully.');
+                
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Failed to create event: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Failed to create event: ' . $e->getMessage(),
+            ], 500);
         }
     }
+    
+    public function show($id)
+    {
+        try {
+            $event = Event::findOrFail($id);
+            return response()->json($event);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to fetch event: ' . $e->getMessage()], 404);
+        }
+    }
+
+
 
     public function edit(Event $event)
     {
