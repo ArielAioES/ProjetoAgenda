@@ -6,14 +6,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        // Extract email and password from the request
-        $credentials = request(['email', 'password']);
+        $credentials = $request->validate([
+            "email" => "required|email",
+            "password" => "required|string|min:6",
+        ]);
 
-        // Attempt to authenticate the user using the provided credentials
         if(!Auth::attempt($credentials)){
 
             $error = "Not authorized";
@@ -28,7 +29,6 @@ class LoginController extends Controller
         $response['username']= $user->username;
         $response['email']= $user->email;
         $response['token']= $user->createToken('token')->accessToken;
-        // Return a success response with user information and access token
         return response()->json($response, 200);
     }
 
@@ -49,7 +49,6 @@ class LoginController extends Controller
     {
         // Check if there's an event ID in the session
         if ($event_id = session('event_id')) {
-            // If an event ID is found, remove it from the session
             session()->forget('event_id');
 
             // Redirect the user to the event page associated with the event ID

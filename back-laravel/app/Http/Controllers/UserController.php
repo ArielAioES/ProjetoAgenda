@@ -8,26 +8,21 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-        // List all users
         public function index()
     {
         $users = User::all();
 
-        // Return the list of registered users
         return response()->json($users, 200);
     }
 
-        // Show a specific user
         public function show($id){
 
             $user = User::find($id);
 
-            // Validation in case the specific user is not found
             if(!$user){
                 return response()->json(["error" => "User not found"], 404);
             }
 
-            // Return the selected user
             return response()->json($user, 200);
         } 
 
@@ -48,7 +43,6 @@ class UserController extends Controller
         // Check if the email is already registered
         $existingUser = User::where('email', $validatedData['email'])->first();
         if ($existingUser) {
-            // Return error message if failed
             return response()->json(["error" => "User already exists"], 400);
         }
 
@@ -59,11 +53,9 @@ class UserController extends Controller
             "password" => bcrypt($validatedData["password"]),
         ]);
 
-        // Return success message if created
         return response()->json(["message" => "User registered successfully"], 201);
     }
 
-        // Update registered user
         public function update(Request $request, $id){
 
             $validatedData = $request->validate([
@@ -106,16 +98,5 @@ class UserController extends Controller
             return response()->json(["message"=> "User deleted successfully"],200);
         }
 
-        // Relation method to get user events
-        public function events()
-        {
-            return $this->belongsToMany(EventController::class);
-        }
-
-        // Relation method to get user relationships
-        public function users()
-        {
-            return $this->belongsToMany(User::class);
-        }
 
 }

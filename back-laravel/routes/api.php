@@ -3,7 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EventController;
 use Illuminate\Support\Str;
 
@@ -11,7 +11,7 @@ Route::middleware(['guest:api'])->group(function () { //guest: Route accessible 
     Route::get('/', function() {
         return 'Olá mundo API';
     });
-    Route::post('login', [LoginController::class, 'login']); // Use array to call controller method
+    Route::post('login', [AuthController::class, 'login']); // Use array to call controller method
     Route::get('/events/accept/{event}', 'EventController@acceptInvitation')->name('events.accept');
 });
 
@@ -21,7 +21,7 @@ Route::middleware(['auth:api'])->group(function () { //auth: Routes accessible o
     });
     Route::apiResource('/user', UserController::class);
     Route::post('/event', [EventController::class,'store']);
-    Route::post('logout', [LoginController::class, 'logout']); 
+    Route::post('logout', [AuthController::class, 'logout']); 
     Route::get('/events', [EventController::class, 'index'])->name('events.index');
     Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
