@@ -13,6 +13,7 @@ class EventController extends Controller
     public function index()
     {
         try {
+            // Fetch all events from the database
             $events = Event::all();
             return view('events.index', compact('events'));
         } catch (\Exception $e) {
@@ -80,7 +81,6 @@ class EventController extends Controller
     {
         try {
             $event->delete();
-
             return redirect()->route('events.index')
                 ->with('success', 'Event deleted successfully');
         } catch (\Exception $e) {
@@ -90,24 +90,44 @@ class EventController extends Controller
     public function inviteUser(Request $request)
     {
         try {
-            // Validating the received data
             $request->validate([
                 'email' => 'required|email',
                 'event_id' => 'required|exists:events,id',
             ]);
 
-            // Finding the event by its ID
             $event = Event::findOrFail($request->event_id);
 
-            // Sending the invitation via email
+            // Send the invitation via email using the EventInvitation Mailable
             Mail::to($request->email)->send(new EventInvitation($event));
 
-            // Returning a success response
             return response()->json(['message' => 'Invitation sent successfully'], 200);
         } catch (\Exception $e) {
-            // Returning an error response in case of an exception
             return response()->json(['error' => 'Failed to send invitation by email: ' . $e->getMessage()], 500);
         }
+    }
+    public function acceptInvitation(Request $request, Event $event)
+    {
+        if ($request->user()) {
+            return redirect()->route('event.show', $event);
+        } else {
+            return redirect()->route('login')->with('event_id', $event->id);
+        }
+    }
+
+    public function getUserEventId(Request $request)
+    {
+        $user = $request->user();
+        if ($user) {
+            // Get the ID of the event associated with the user
+            $event = $user->events->first(); 
+
+            if ($event) {
+                return response()->json(['eventId' => $event->id]);
+            } else {
+                return response()->json(['error' => 'User is not associated with any event'], 404);
+            }
+        }
+        return response()->json(['error' => 'User not authenticated'], 401);
     }
 
 }
