@@ -52,11 +52,11 @@ class AuthController extends Controller
             session()->forget('event_id');
 
             // Redirect the user to the event page associated with the event ID
-            return redirect()->route('event.show', $event_id);
+            return response()->json(['event_id' => $event_id]);
         }
 
         // If no event ID is found in the session, redirect to the homepage
-        return redirect('/');
+        return response()->json(['message' => 'Redirect to homepage'], 200);
     }
 }
     

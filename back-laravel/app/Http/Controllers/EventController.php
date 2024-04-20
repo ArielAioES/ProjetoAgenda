@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\User;
 use App\Mail\EventInvitation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class EventController extends Controller
@@ -15,9 +16,9 @@ class EventController extends Controller
         try {
             // Fetch all events from the database
             $events = Event::all();
-            return view('events.index', compact('events'));
+            return $events;
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to fetch events: ' . $e->getMessage());
+            return $e->getMessage();
         }
     }
 
@@ -37,18 +38,51 @@ class EventController extends Controller
                 'description' => 'required',
             ]);
 
-            Event::create([
+            $user = $request->user();
+
+            $eventData = [
                 'title' => $request->title,
                 'date' => $request->date,
                 'time' => $request->time,
                 'duration' => $request->duration,
                 'description' => $request->description,
-            ]);
+            ];
 
-            return redirect()->route('events.index')
-                ->with('success', 'Event created successfully.');
+            $eventCreated = Event::create($eventData);
+
+            $eventCreated->users()->attach($user->id);
+
+            return response()->json([
+                'message' => 'Event created successfully.',
+                'event' => $eventCreated,
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Failed to create event: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Failed to create event: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    protected function userHasPermission(Event $event)
+    {
+        if ($event->user_id === Auth::id()) {
+            return true;
+        }
+        return $event->users()->where('user_id', Auth::id())->exists();
+    }
+
+    public function show($id)
+    {
+        $event = Event::find($id);
+
+        if (!$event) {
+            return response()->json(['error' => 'Event not found'], 404);
+        }
+
+        if ($this->userHasPermission($event)) {
+            return response()->json($event, 200);
+        } else {
+            return response()->json(['error' => 'Access denied'], 403);
         }
     }
 
@@ -70,10 +104,9 @@ class EventController extends Controller
 
             $event->update($request->all());
 
-            return redirect()->route('events.index')
-                ->with('success', 'Event updated successfully');
+            return response()->json(['message' => 'Event updated successfully'], 200);
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'Failed to update event: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to update event: ' . $e->getMessage()], 500);
         }
     }
 
@@ -81,12 +114,12 @@ class EventController extends Controller
     {
         try {
             $event->delete();
-            return redirect()->route('events.index')
-                ->with('success', 'Event deleted successfully');
+            return response()->json(['message' => 'Event deleted successfully'], 200);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to delete event: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to delete event: ' . $e->getMessage()], 500);
         }
     }
+
     public function inviteUser(Request $request)
     {
         try {
@@ -105,12 +138,13 @@ class EventController extends Controller
             return response()->json(['error' => 'Failed to send invitation by email: ' . $e->getMessage()], 500);
         }
     }
+
     public function acceptInvitation(Request $request, Event $event)
     {
         if ($request->user()) {
-            return redirect()->route('event.show', $event);
+            return response()->json(['redirect_url' => route('event.show', $event)], 200);
         } else {
-            return redirect()->route('login')->with('event_id', $event->id);
+            return response()->json(['redirect_url' => route('login'), 'event_id' => $event->id], 200);
         }
     }
 
@@ -118,16 +152,14 @@ class EventController extends Controller
     {
         $user = $request->user();
         if ($user) {
-            // Get the ID of the event associated with the user
-            $event = $user->events->first(); 
+            $event = $user->events->first();
 
             if ($event) {
-                return response()->json(['eventId' => $event->id]);
+                return response()->json(['eventId' => $event->id], 200);
             } else {
                 return response()->json(['error' => 'User is not associated with any event'], 404);
             }
         }
         return response()->json(['error' => 'User not authenticated'], 401);
     }
-
 }
