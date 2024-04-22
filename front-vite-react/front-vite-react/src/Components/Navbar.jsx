@@ -15,7 +15,7 @@ const Navbar = () => {
             <div className="home">
                 <h2>
                     <Link to="/">
-                        <FaHome />Home
+                        <FaHome />Inicio
                     </Link>
                 </h2>
             </div>
@@ -31,12 +31,12 @@ const Navbar = () => {
                 <div className="login-register">
                     <h2>
                         <Link to="/login">
-                            <p className="login">Login</p>
+                            <p className="login">Logar</p>
                         </Link>
                     </h2>
                     <h2>
                         <Link to="/register">
-                            <p className="register">Register</p>
+                            <p className="register">Registrar</p>
                         </Link>
                     </h2>
                 </div>

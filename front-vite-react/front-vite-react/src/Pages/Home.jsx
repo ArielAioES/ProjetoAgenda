@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAtom } from 'jotai';
 
-import { tokenAtom } from '../Components/atoms/atoms'; 
-
+import { tokenAtom } from '../Components/atoms/atoms';
 
 import '../Pages/Css/Home.css';
 
@@ -12,10 +11,10 @@ const Home = () => {
   const [token] = useAtom(tokenAtom); // Obtendo o token do átomo
   const navigate = useNavigate()
 
-
   const handleCalendarClick = () => {
     navigate('/calendar');
   };
+
   const handleEventClick = () => {
     navigate('/event');
   };
@@ -25,48 +24,48 @@ const Home = () => {
       className="home-container"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.3 }} s
     >
       <div className="home-content">
         <motion.h1
           id='test'
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 1 }}
+          transition={{ delay: 0.1, duration: 0.5 }}
           className='title-home'
         >
-          Welcome to Your Agenda
+          Bem-vindo à sua Agenda
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
         >
-          This is your personal agenda where you can organize your tasks, events, and appointments.
+          Esta é a sua agenda pessoal onde você pode organizar seus eventos e compromissos.
         </motion.p>
         <motion.p
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 1 }}
+          transition={{ delay: .5, duration: 0.5 }}
         >
-          Use the navigation bar above to access different sections of the application.
+          Use a barra de navegação acima para acessar diferentes seções da aplicação.
         </motion.p>
         <motion.p
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2, duration: 1 }}
+          transition={{ delay: .7, duration: 0.5 }}
         >
-          If you haven't registered yet, click on the "Register" link to create an account.
+          Se você ainda não se cadastrou, clique no link "Registrar" para criar uma conta.
         </motion.p>
       </div>
       {token && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.5, duration: 1 }}
+          transition={{ delay: .9, duration: 0.5 }}
         >
-          <button className='btn-event' onClick={handleEventClick}>Go to create a new event</button>
-          <button className='btn-calendar' onClick={handleCalendarClick}>Go to Calendar</button>
+          <button className='btn-event' onClick={handleEventClick}>Ir para criar um novo evento</button>
+          <button className='btn-calendar' onClick={handleCalendarClick}>Ir para o Calendário</button>
         </motion.div>
       )}
     </motion.div>

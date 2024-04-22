@@ -13,14 +13,13 @@ class EventController extends Controller
 {
     public function index()
     {
-        try {
-            // Fetch all events from the database
-            $events = Event::all();
-            return $events;
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
+        $user = auth()->user();
+
+        $events = $user->events;
+
+        return response()->json($events);
     }
+
 
     public function create()
     {
@@ -30,31 +29,32 @@ class EventController extends Controller
     public function store(Request $request)
     {
         try {
-            $request->validate([
+            $user = auth()->user();
+    
+            // Crie uma instância do modelo de evento
+            $event = new Event();
+    
+            // Atribua o ID do usuário ao evento
+            $event->user_id = $user->id;
+    
+            // Valide os dados do pedido
+            $validatedData = $request->validate([
                 'title' => 'required',
                 'date' => 'required',
                 'time' => 'required',
                 'duration' => 'required',
                 'description' => 'required',
             ]);
-
-            $user = $request->user();
-
-            $eventData = [
-                'title' => $request->title,
-                'date' => $request->date,
-                'time' => $request->time,
-                'duration' => $request->duration,
-                'description' => $request->description,
-            ];
-
-            $eventCreated = Event::create($eventData);
-
-            $eventCreated->users()->attach($user->id);
-
+    
+            // Preencha os atributos do evento com os dados validados
+            $event->fill($validatedData);
+    
+            // Salve o evento no banco de dados
+            $event->save();
+    
             return response()->json([
                 'message' => 'Event created successfully.',
-                'event' => $eventCreated,
+                'event' => $event, // Retorna o evento criado
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -62,6 +62,8 @@ class EventController extends Controller
             ], 500);
         }
     }
+    
+
 
     protected function userHasPermission(Event $event)
     {

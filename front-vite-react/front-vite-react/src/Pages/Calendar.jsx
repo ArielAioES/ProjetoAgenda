@@ -6,49 +6,38 @@ import { motion } from 'framer-motion';
 import { useAtom } from 'jotai';
 
 import { tokenAtom } from '../Components/atoms/atoms';
-
-
 import { API_URL } from '../Components/config';
-
-
 import './Css/Calendar.css';
-
 
 const Calendar = () => {
     const [token] = useAtom(tokenAtom);
-    const [events, setEvents] = useState([]); 
+    const [events, setEvents] = useState([]);
     const navigate = useNavigate();
 
-    // Verifica se há um token ao montar o componente
     useEffect(() => {
-        if (!token) {
-            navigate('/login');
-            return;
-        }
+        const fetchEvents = async () => {
+            try {
+                const response = await fetch(`${API_URL}/api/events/list`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    },
+                });
 
-        fetchEvents();
-    }, [token, navigate]);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch events');
+                }
 
-    const fetchEvents = async () => {
-        try {
-            const response = await fetch(`${API_URL}/api/events`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch events');
+                const data = await response.json();
+                setEvents(data);
+            } catch (error) {
+                console.error(error);
             }
+        };
 
-            const data = await response.json();
-            setEvents(data);
-        } catch (error) {
-            console.error(error);
-        }
-    };
+        fetchEvents(); // Chamada para buscar os eventos quando o componente é montado
+    }, [token]);
 
     const handleEventClick = (info) => {
         navigate(`/event/${info.event.id}`);

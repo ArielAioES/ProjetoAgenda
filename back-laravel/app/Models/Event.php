@@ -17,6 +17,10 @@ class Event extends Model
         'description',
     ];
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
     public function users()
     {
     return $this->belongsToMany(User::class); //used to define a many-to-many relationship between the User and Event models
