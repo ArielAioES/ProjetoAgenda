@@ -1,0 +1,16 @@
+.form-container {
+    margin-top: 3rem;
+}
+
+.btn-submit {
+    margin-top: 2rem;
+}
+
+.itens {
+    margin-top: .7rem;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
