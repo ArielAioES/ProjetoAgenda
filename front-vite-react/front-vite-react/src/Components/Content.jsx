@@ -6,7 +6,7 @@ import Calendar from "../Pages/Calendar";
 import Event from "../Pages/Event";
 import Logout from "../Pages/Logout";
 import User from "../Pages/User";
-import EditEvent from "../Pages/EditEvent";
+import ShowEvent from "../Pages/ShowEvent";
 import App from "../App";
 
 const AppRoutes = () => {
@@ -20,7 +20,7 @@ const AppRoutes = () => {
                     <Route path="/calendar" element={<Calendar />} />
                     <Route path="/event" element={<Event />} />
                     <Route path="/user" element={<User />} />
-                    <Route path="/event/:id" element={<EditEvent />} />
+                    <Route path="/event/:id" element={<ShowEvent />} />
                     <Route path="/logout" element={<Logout />} />
                 </Route>
             </Routes>

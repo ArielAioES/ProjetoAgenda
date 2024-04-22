@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAtom } from 'jotai';
 
-import { tokenAtom } from '../Components/atoms/atoms';
+import { API_URL } from '../Components/config';
 
+import { tokenAtom } from '../Components/atoms/atoms';
 
 const Event = () => {
     const [token] = useAtom(tokenAtom);
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         title: '',
         date: '',
@@ -22,8 +24,26 @@ const Event = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        try {
+            const response = await fetch(`${API_URL}/api/event`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save event');
+            }
+
+            navigate('/calendar');
+        } catch (error) {
+            setError(error.message);
+        }
     };
 
     if (!token) {
@@ -34,7 +54,7 @@ const Event = () => {
         { label: 'Title', type: 'text', name: 'title', value: formData.title, delay: 0.4 },
         { label: 'Date', type: 'date', name: 'date', value: formData.date, delay: 0.6 },
         { label: 'Time', type: 'time', name: 'time', value: formData.time, delay: 0.8 },
-        { label: 'Duration', type: 'time', name: 'duration', value: formData.duration, delay: 1 },
+        { label: 'Duration', type: 'integer', name: 'duration', value: formData.duration, delay: 1 },
         { label: 'Description', type: 'textarea', name: 'description', value: formData.description, delay: 1.2 }
     ];
 
@@ -100,6 +120,16 @@ const Event = () => {
                 >
                     Salvar
                 </motion.button>
+                {error && (
+                    <motion.div
+                        className="error-message"
+                        initial={{ x: -50, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{ delay: 1.2 }}
+                    >
+                        {error}
+                    </motion.div>
+                )}
             </form>
         </motion.div>
     );

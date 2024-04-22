@@ -44,6 +44,10 @@
   border-radius: 8px;
 
   cursor: pointer;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fc-title {
@@ -62,13 +66,13 @@
 }
 
 .calendar-container {
-  margin-top: 3.5rem;
+  margin-top: 3rem;
   width: 100%;
   display: flex;
   justify-content: center;
 }
 
 .calendar-wrapper {
-  width: 100vh;
+  width: 80vh;
   height: 100%;
 }

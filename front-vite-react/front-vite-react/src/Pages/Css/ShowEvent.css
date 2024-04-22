@@ -1,0 +1,32 @@
+.event-details-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #333;
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.event-details-container h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.event-details-container h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.event-details-container p {
+    font-size: 16px;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.loading {
+    text-align: center;
+    margin-top: 50px;
+    font-size: 18px;
+    color: #fff;
+}
