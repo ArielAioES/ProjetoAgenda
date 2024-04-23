@@ -32,10 +32,10 @@ const Logout = () => {
 
                 navigate('/');
             } else {
-                throw new Error('Logout failed');
+                throw new Error('Falha no logout');
             }
         } catch (error) {
-            console.error('Error logging out:', error);
+            console.error('Erro ao sair:', error);
         } finally {
             setLoading(false);
         }
@@ -53,8 +53,8 @@ const Logout = () => {
             transition={{ duration: 0.5 }}
         >
             <div>
-                <h2>Confirm Logout</h2>
-                <p>Are you sure you want to logout?</p>
+                <h2>Confirmar Logout</h2>
+                <p>Tem certeza de que deseja sair?</p>
                 <motion.button
                     onClick={handleLogout}
                     disabled={loading}
@@ -64,7 +64,7 @@ const Logout = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                 >
-                    {loading ? 'Logging out...' : 'Logout'}
+                    {loading ? 'Saindo...' : 'Sair'}
                 </motion.button>
             </div>
         </motion.div>
