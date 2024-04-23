@@ -1,4 +1,4 @@
-<p align="center"><span style="font-size:80px;">Event Calendar System</span></p>
+<p align="center"><span style="font-size:200px;">Event Calendar System</span></p>
 
 This is an event calendar system developed with Laravel 10 for the backend and React with Vite for the frontend. The system allows users to view a calendar of events, add events to their schedule, and explore events by category.
 
