@@ -65,7 +65,7 @@ const User = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    Name: {username}
+                    Nome: {username}
                 </motion.h2>
                 <motion.h2
                     initial={{ opacity: 0, y: -20 }}
@@ -84,7 +84,7 @@ const User = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
             >
-                Delete account
+                Deletar conta
             </motion.button>
             <motion.button
                 className='leave'
@@ -95,7 +95,7 @@ const User = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
             >
-                Leave
+                Sair
             </motion.button>
 
             {error && (

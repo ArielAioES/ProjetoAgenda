@@ -18,7 +18,7 @@ const AppRoutes = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/calendar" element={<Calendar />} />
-                    <Route path="/event" element={<NewEvent />} />
+                    <Route path="/newevent" element={<NewEvent />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/event/:id" element={<ShowEvent />} />
                     <Route path="/logout" element={<Logout />} />

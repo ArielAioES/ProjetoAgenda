@@ -31,13 +31,6 @@ class EventController extends Controller
         try {
             $user = auth()->user();
     
-            // Crie uma instância do modelo de evento
-            $event = new Event();
-    
-            // Atribua o ID do usuário ao evento
-            $event->user_id = $user->id;
-    
-            // Valide os dados do pedido
             $validatedData = $request->validate([
                 'title' => 'required',
                 'date' => 'required',
@@ -45,16 +38,18 @@ class EventController extends Controller
                 'duration' => 'required',
                 'description' => 'required',
             ]);
+            
+            $event = new Event();
     
-            // Preencha os atributos do evento com os dados validados
+            $event->user_id = $user->id;
+
             $event->fill($validatedData);
     
-            // Salve o evento no banco de dados
             $event->save();
     
             return response()->json([
                 'message' => 'Event created successfully.',
-                'event' => $event, // Retorna o evento criado
+                'event' => $event,
             ]);
         } catch (\Exception $e) {
             return response()->json([
