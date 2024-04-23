@@ -5,12 +5,14 @@ import { motion } from 'framer-motion';
 import { tokenAtom } from '../Components/atoms/atoms';
 import { API_URL } from '../Components/config';
 import '../Pages/Css/ShowEvent.css';
+import EmailForm from '../Components/InviteUser';
 
 const ShowEvent = () => {
     const { id } = useParams();
     const [eventData, setEventData] = useState(null);
-    const [users, setUsers] = useState([]);
+    const [users] = useState([]);
     const [token] = useAtom(tokenAtom);
+    const [showInviteModal, setShowInviteModal] = useState(false);
 
     useEffect(() => {
         const fetchEventData = async () => {
@@ -38,9 +40,18 @@ const ShowEvent = () => {
         fetchEventData();
     }, [id, token]);
 
+
     if (!eventData) {
         return <div className="loading">Carregando...</div>;
     }
+
+    const handleInviteClick = () => {
+        setShowInviteModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowInviteModal(false);
+    };
 
     return (
         <motion.div
@@ -60,6 +71,9 @@ const ShowEvent = () => {
                 <h3>Horário: {(eventData.time)}</h3>
                 <h3>Duração: {eventData.duration} horas</h3>
                 <h3>Descrição do evento: {eventData.description}</h3>
+
+                <button onClick={handleInviteClick}>Enviar Convite</button>
+                {showInviteModal && <EmailForm onClose={handleCloseModal}/>}
 
                 <ul>
                     {users.map(user => (
