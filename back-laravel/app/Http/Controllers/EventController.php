@@ -14,10 +14,14 @@ class EventController extends Controller
     public function index()
     {
         $user = auth()->user();
-
+    
         $events = $user->events;
-
-        return response()->json($events);
+        $eventsAsParticipant = $user->eventsAsParticipant;
+    
+        return response()->json([
+            'events' => $events,
+            'eventsAsParticipant' => $eventsAsParticipant
+        ]);
     }
 
 
@@ -170,5 +174,15 @@ class EventController extends Controller
             }
         }
         return response()->json(['error' => 'User not authenticated'], 401);
+    }
+
+    public function joinEvent($id){
+        $user = auth()-> user();
+
+        $user->eventsAsParticipant()->attach($id);
+
+        $event = Event::findOrFail($id);
+
+        return response()->json(['success'=> $event->title], 200);
     }
 }

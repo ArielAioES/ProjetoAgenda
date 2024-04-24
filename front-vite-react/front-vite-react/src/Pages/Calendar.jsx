@@ -30,13 +30,14 @@ const Calendar = () => {
                 }
 
                 const data = await response.json();
-                setEvents(data);
+                const allEvents = [...data.events, ...data.eventsAsParticipant];
+                setEvents(allEvents);
             } catch (error) {
                 console.error(error);
             }
         };
 
-        fetchEvents(); // Chamada para buscar os eventos quando o componente é montado
+        fetchEvents();
     }, [token]);
 
     const handleEventClick = (info) => {

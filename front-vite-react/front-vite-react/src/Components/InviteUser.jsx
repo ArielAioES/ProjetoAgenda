@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
-import { API_URL } from './config';
-import { Resend } from 'resend';
+import { useAtom } from 'jotai';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import emailjs from 'emailjs-com';
+import { HOST_URL } from './config';
+import { tokenAtom } from '../Components/atoms/atoms';
+
 import '../Components/Css/InviteUser.css';
 
 const EmailForm = ({ onClose }) => {
+  const { id } = useParams();
+  const [token] = useAtom(tokenAtom);
   const [email, setEmail] = useState('');
-  const [event_id, setEventId] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [showOverlay, setShowOverlay] = useState(true);
+  const navigate = useNavigate();
 
   const handleClose = () => {
     setShowOverlay(false);
     onClose();
   };
 
-  const resend = new Resend('re_EcZzsvEU_QTFuPXHqPGDLQCHQsgv3x9KF');
-
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
-  };
-
-  const handleEventIdChange = (e) => {
-    setEventId(e.target.value);
   };
 
   const handleSubmit = async (e) => {
@@ -31,42 +32,15 @@ const EmailForm = ({ onClose }) => {
     setLoading(true);
 
     try {
-      const eventResponse = await fetch(`${API_URL}/api/${event_id}/getEventDetails`, {
-        method: 'GET',
-      });
+      const templateParams = {
+        to_email: email,
+        event_link: `${HOST_URL}/events/join/${id}`,
+      };
 
-      if (!eventResponse.ok) {
-        throw new Error('Failed to fetch event details');
-      }
+      await emailjs.send('service_coeecjh', 'template_8m5wyws', templateParams, 'qIhvbaLRmzK3O4hcm');
 
-      const eventData = await eventResponse.json();
-      
-      // Send the user's invitation to the backend
-      const inviteResponse = await fetch(`${API_URL}/api/${event_id}/inviteUser`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, eventData }),
-      });
-
-      if (!inviteResponse.ok) {
-        throw new Error('Failed to send invitation');
-      }
-
-      const inviteData = await inviteResponse.json();
-      setMessage(inviteData.message);
+      setMessage('Convite enviado com sucesso!');
       setEmail('');
-      setEventId('');
-
-      await resend.emails.send({
-        from: 'Acme <onboarding@resend.dev>',
-        to: email, 
-        subject: 'Convite para o evento',
-        html: `<p>Participe do meu evento. Clique <a href="${API_URL}/login?eventId=${event_id}">aqui</a> para fazer login e acessar o evento</p>`, 
-      });
-
-
     } catch (error) {
       setError(error.message);
     } finally {
@@ -74,30 +48,30 @@ const EmailForm = ({ onClose }) => {
     }
   };
 
+  if (!token) {
+    navigate('/login');
+    return null;
+  }
 
   return (
     <div className={`EmailForm ${showOverlay ? 'show' : ''}`}>
       <div className="modal">
-      <h2 className='send-invite'>Enviar Convite</h2>
-      <button className="close-button" onClick={handleClose}>Fechar</button>
-      <form onSubmit={handleSubmit} className='form-invite'>
-        <label>
-          Email:
-          <input type="email" value={email} onChange={handleEmailChange} />
-        </label>
-        <br />
-        <label>
-          ID do Evento:
-          <input type="text" value={event_id} onChange={handleEventIdChange} />
-        </label>
-        <br />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Enviando...' : 'Enviar Convite'}
-        </button>
-      </form>
-      {message && <p>{message}</p>}
-      {error && <p>Erro: {error}</p>}
-    </div>
+        <h2 className='send-invite'>Enviar Convite</h2>
+        <button className="close-button" onClick={handleClose}>Fechar</button>
+        <form onSubmit={handleSubmit} className='form-invite'>
+          <label>
+            Email:
+            <input type="email" value={email} onChange={handleEmailChange} />
+          </label>
+          <br />
+          <br />
+          <button type="submit" disabled={loading}>
+            {loading ? 'Enviando...' : 'Enviar Convite'}
+          </button>
+        </form>
+        {message && <p>{message}</p>}
+        {error && <p>Erro: {error}</p>}
+      </div>
     </div>
   );
 };
