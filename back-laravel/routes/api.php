@@ -24,14 +24,9 @@ Route::apiResource('/user', UserController::class);
         Route::get('/events/list', [EventController::class, 'index'])->name('events.index');
         Route::get('/event/{id}', [EventController::class,'show']);
         Route::post('logout', [AuthController::class, 'logout']); 
-        Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
-        Route::post('/events', [EventController::class, 'store'])->name('events.store');
-        Route::get('/events/{event}/edit', [EventController::class, 'edit'])->name('events.edit');
         Route::put('/events/{event}', [EventController::class, 'update'])->name('events.update');
         Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
-        Route::post('/events/{event}/invite', [EventController::class, 'showInviteForm'])->name('events.invite');
-        Route::post('/events/invite', [EventController::class, 'inviteUser'])->name('events.invite.user');
-        Route::get('/user/eventId', [EventController::class, 'getEventUser']);
+        Route::post('/events/{event}/invite', [EventController::class, 'inviteUser'])->name('events.invite.user');
 
 });
 

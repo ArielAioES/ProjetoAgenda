@@ -5,7 +5,7 @@ import { useAtom } from 'jotai'
 import { tokenAtom } from '../Components/atoms/atoms';
 ;
 
-import './Navbar.css';
+import '../Components/Css/Navbar.css';
 
 const Navbar = () => {
     const [token] = useAtom(tokenAtom); // Obtendo o token do átomo

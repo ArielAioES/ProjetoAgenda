@@ -16,7 +16,7 @@ const Home = () => {
   };
 
   const handleEventClick = () => {
-    navigate('/newevent');
+    navigate('/new-event');
   };
 
   return (

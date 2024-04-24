@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { API_URL } from './config';
 import { Resend } from 'resend';
+import '../Components/Css/InviteUser.css';
 
 const EmailForm = ({ onClose }) => {
   const [email, setEmail] = useState('');
@@ -77,9 +78,9 @@ const EmailForm = ({ onClose }) => {
   return (
     <div className={`EmailForm ${showOverlay ? 'show' : ''}`}>
       <div className="modal">
-      <h2>Enviar Convite</h2>
+      <h2 className='send-invite'>Enviar Convite</h2>
       <button className="close-button" onClick={handleClose}>Fechar</button>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className='form-invite'>
         <label>
           Email:
           <input type="email" value={email} onChange={handleEmailChange} />

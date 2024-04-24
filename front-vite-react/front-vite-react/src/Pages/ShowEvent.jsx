@@ -71,6 +71,7 @@ const ShowEvent = () => {
                 <h3>Horário: {(eventData.time)}</h3>
                 <h3>Duração: {eventData.duration} horas</h3>
                 <h3>Descrição do evento: {eventData.description}</h3>
+                <h3>ID do evento: {eventData.id}</h3>
 
                 <button onClick={handleInviteClick}>Enviar Convite</button>
                 {showInviteModal && <EmailForm onClose={handleCloseModal}/>}
