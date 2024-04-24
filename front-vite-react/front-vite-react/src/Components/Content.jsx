@@ -8,6 +8,7 @@ import Logout from "../Pages/Logout";
 import User from "../Pages/User";
 import ShowEvent from "../Pages/ShowEvent";
 import App from "../App";
+import EmailForm from "./InviteUser";
 
 const AppRoutes = () => {
     return (
@@ -21,6 +22,7 @@ const AppRoutes = () => {
                     <Route path="/new-event" element={<NewEvent />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/event/:id" element={<ShowEvent />} />
+                    <Route path="/emailForm/:event_id" Component={EmailForm}/>
                     <Route path="/logout" element={<Logout />} />
                 </Route>
             </Routes>

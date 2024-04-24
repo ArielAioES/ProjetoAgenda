@@ -57,8 +57,6 @@ class EventController extends Controller
             ], 500);
         }
     }
-    
-
 
     protected function userHasPermission(Event $event)
     {
@@ -128,7 +126,10 @@ class EventController extends Controller
             $event = Event::findOrFail($request->event_id);
 
             // Send the invitation via email using the EventInvitation Mailable
-            Mail::to($request->email)->send(new EventInvitation($event));
+            Mail::send('emails.invitation', ['event' => $event], function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject('Event invitation');
+            });
 
             return response()->json(['message' => 'Invitation sent successfully'], 200);
         } catch (\Exception $e) {
@@ -138,12 +139,23 @@ class EventController extends Controller
 
     public function acceptInvitation(Request $request, Event $event)
     {
-        if ($request->user()) {
-            return response()->json(['redirect_url' => route('event.show', $event)], 200);
-        } else {
-            return response()->json(['redirect_url' => route('login'), 'event_id' => $event->id], 200);
+        try {
+            $request->validate([
+                'eventId' => 'required|exists:events,id',
+                'userId' => 'required|exists:users,id',
+            ]);
+    
+            $event = Event::findOrFail($request->eventId);
+            $user = User::findOrFail($request->userId);
+    
+            $event->users()->attach($user);
+    
+            return response()->json(['message' => 'Invitation accepted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to accept invitation: ' . $e->getMessage()], 500);
         }
     }
+
 
     public function getUserEventId(Request $request)
     {
