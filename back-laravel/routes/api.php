@@ -28,6 +28,9 @@ Route::apiResource('/user', UserController::class);
         Route::delete('/events/{event}', [EventController::class, 'destroy'])->name('events.destroy');
         Route::post('/events/{event}/invite', [EventController::class, 'inviteUser'])->name('events.invite.user');
 
+        Route::post('/events/join/{id}', [EventController::class, 'joinEvent']); 
+
+
 });
 
 

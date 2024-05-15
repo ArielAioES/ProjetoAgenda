@@ -7,6 +7,7 @@ import NewEvent from "../Pages/NewEvent";
 import Logout from "../Pages/Logout";
 import User from "../Pages/User";
 import ShowEvent from "../Pages/ShowEvent";
+import JoinEvent from "../Pages/JoinEvent";
 import App from "../App";
 import EmailForm from "./InviteUser";
 
@@ -22,7 +23,8 @@ const AppRoutes = () => {
                     <Route path="/new-event" element={<NewEvent />} />
                     <Route path="/user" element={<User />} />
                     <Route path="/event/:id" element={<ShowEvent />} />
-                    <Route path="/emailForm/:event_id" Component={EmailForm}/>
+                    <Route path="/emailForm/:event_id" Component={EmailForm} />
+                    <Route path="/events/join/:id" element={<JoinEvent />} />
                     <Route path="/logout" element={<Logout />} />
                 </Route>
             </Routes>
